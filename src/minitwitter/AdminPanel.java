@@ -30,7 +30,7 @@ public class AdminPanel extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
-        addUserTextAera = new javax.swing.JTextArea();
+        addUserTextArea = new javax.swing.JTextArea();
         addUserButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         addGroupTextArea = new javax.swing.JTextArea();
@@ -43,17 +43,18 @@ public class AdminPanel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTree1.setModel(new ObjectTreeModel("Something"));
         jScrollPane1.setViewportView(jTree1);
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        addUserTextAera.setColumns(20);
-        addUserTextAera.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
-        addUserTextAera.setRows(1);
-        addUserTextAera.setTabSize(4);
-        addUserTextAera.setToolTipText("Enter a user name to add");
-        jScrollPane2.setViewportView(addUserTextAera);
+        addUserTextArea.setColumns(20);
+        addUserTextArea.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        addUserTextArea.setRows(1);
+        addUserTextArea.setTabSize(4);
+        addUserTextArea.setToolTipText("Enter a user name to add");
+        jScrollPane2.setViewportView(addUserTextArea);
 
         addUserButton.setText("Add User");
 
@@ -70,6 +71,11 @@ public class AdminPanel extends javax.swing.JFrame {
         addGroupButton.setText("Add Group");
 
         userViewButton.setText("Open User View");
+        userViewButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userViewButtonMouseClicked(evt);
+            }
+        });
 
         positivePercentButton.setText("Show Positive Percentage");
 
@@ -137,6 +143,11 @@ public class AdminPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void userViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userViewButtonMouseClicked
+        // TODO add your handling code here:
+        new UserUi(addUserTextArea.getText()).setVisible(true);
+    }//GEN-LAST:event_userViewButtonMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -176,7 +187,7 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JButton addGroupButton;
     private javax.swing.JTextArea addGroupTextArea;
     private javax.swing.JButton addUserButton;
-    private javax.swing.JTextArea addUserTextAera;
+    private javax.swing.JTextArea addUserTextArea;
     private javax.swing.JButton groupTotalButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

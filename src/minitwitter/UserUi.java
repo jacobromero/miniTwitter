@@ -17,6 +17,11 @@ public class UserUi extends javax.swing.JFrame {
     public UserUi() {
         initComponents();
     }
+    
+    public UserUi(String userName) {
+        initComponents();
+        userIdTextArea.setText(userName);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,7 +43,7 @@ public class UserUi extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         newsFeedList = new javax.swing.JList<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
