@@ -5,16 +5,36 @@
  */
 package minitwitter;
 
+import java.util.HashSet;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+
 /**
  *
  * @author Jacob Romero
  */
+// Singleton Class
 public class AdminPanel extends javax.swing.JFrame {
+    private static AdminPanel INSTANCE;
+    
+    public static AdminPanel getInstance() {
+        if (INSTANCE == null) {
+            synchronized (AdminPanel.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new AdminPanel();
+                }
+            }
+        }
+        
+        return INSTANCE;
+    }
 
     /**
      * Creates new form AdminPanel
      */
-    public AdminPanel() {
+    private AdminPanel() {
         initComponents();
     }
 
@@ -43,7 +63,7 @@ public class AdminPanel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTree1.setModel(new ObjectTreeModel("Something"));
+        jTree1.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Root")));
         jScrollPane1.setViewportView(jTree1);
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -57,6 +77,11 @@ public class AdminPanel extends javax.swing.JFrame {
         jScrollPane2.setViewportView(addUserTextArea);
 
         addUserButton.setText("Add User");
+        addUserButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addUserButtonMouseClicked(evt);
+            }
+        });
 
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -69,6 +94,11 @@ public class AdminPanel extends javax.swing.JFrame {
         jScrollPane3.setViewportView(addGroupTextArea);
 
         addGroupButton.setText("Add Group");
+        addGroupButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addGroupButtonMouseClicked(evt);
+            }
+        });
 
         userViewButton.setText("Open User View");
         userViewButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -143,10 +173,47 @@ public class AdminPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Opens User Panel if the selection from the JTree is a leaf and not the root node
     private void userViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userViewButtonMouseClicked
-        // TODO add your handling code here:
-        new UserUi(addUserTextArea.getText()).setVisible(true);
+        TreePath[] tp = jTree1.getSelectionPaths();
+        for (TreePath t : tp) {
+            if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
+                new UserUi(((DefaultMutableTreeNode)t.getLastPathComponent()).toString()).setVisible(true);
+            }
+        }
     }//GEN-LAST:event_userViewButtonMouseClicked
+
+    // Adds a group to the JTree as long as the selected item allows for having children
+    private void addGroupButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addGroupButtonMouseClicked
+        TreePath[] tp = jTree1.getSelectionPaths();
+        for (TreePath t : tp) {
+            if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
+                DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(addGroupTextArea.getText());
+                newGroup.setAllowsChildren(true);
+                ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+                addGroupTextArea.setText("");
+            } else {
+                addGroupTextArea.setText("");                
+            }
+        }
+        ((DefaultTreeModel)jTree1.getModel()).reload();
+    }//GEN-LAST:event_addGroupButtonMouseClicked
+
+    // Adds a user to the Jtree as long as the selected item allows for the node to have children
+    private void addUserButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addUserButtonMouseClicked
+        TreePath[] tp = jTree1.getSelectionPaths();
+        for (TreePath t : tp) {
+            if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
+                DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(addUserTextArea.getText());
+                newGroup.setAllowsChildren(false);
+                ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+                addUserTextArea.setText("");
+            } else {
+                addUserTextArea.setText("");
+            }
+        }
+        ((DefaultTreeModel)jTree1.getModel()).reload();
+    }//GEN-LAST:event_addUserButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -178,7 +245,7 @@ public class AdminPanel extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AdminPanel().setVisible(true);
+                getInstance().setVisible(true);
             }
         });
     }
