@@ -26,6 +26,12 @@ public class TreeModel extends DefaultTreeModel implements Visitable {
         ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
     }
     
+    public void addLeaf(String userName) {
+        DefaultMutableTreeNode newUser = new DefaultMutableTreeNode(new User(userName));
+        newUser.setAllowsChildren(false);
+        ((DefaultMutableTreeNode)this.getRoot()).add(newUser);
+    }
+    
     public void addGroup(TreePath t, String groupName) {
         DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(groupName);
         newGroup.setAllowsChildren(true);

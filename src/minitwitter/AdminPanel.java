@@ -36,7 +36,13 @@ public class AdminPanel extends javax.swing.JFrame {
      */
     private AdminPanel() {
         initComponents();
-    }
+        ((TreeModel) jTree1.getModel()).addLeaf("Jacob Romero");
+        
+//        System.out.println(jTree1.getAnchorSelectionPath());
+        for (int i = 0; i < jTree1.getRowCount(); i++) {
+            jTree1.expandRow(i);
+        }
+   }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,8 +66,10 @@ public class AdminPanel extends javax.swing.JFrame {
         messageTotalButton = new javax.swing.JButton();
         userTotalButton = new javax.swing.JButton();
         groupTotalButton = new javax.swing.JButton();
+        errorText = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jTree1.setModel(new TreeModel(new DefaultMutableTreeNode("Root")));
         jScrollPane1.setViewportView(jTree1);
@@ -71,7 +79,6 @@ public class AdminPanel extends javax.swing.JFrame {
 
         addUserTextArea.setColumns(20);
         addUserTextArea.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
-        addUserTextArea.setRows(1);
         addUserTextArea.setTabSize(4);
         addUserTextArea.setToolTipText("Enter a user name to add");
         jScrollPane2.setViewportView(addUserTextArea);
@@ -120,6 +127,8 @@ public class AdminPanel extends javax.swing.JFrame {
 
         groupTotalButton.setText("Show Total Groups");
 
+        errorText.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,7 +154,8 @@ public class AdminPanel extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(addGroupButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addUserButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(addUserButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(errorText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -164,6 +174,8 @@ public class AdminPanel extends javax.swing.JFrame {
                             .addComponent(addGroupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addComponent(userViewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(errorText, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(userTotalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -181,11 +193,19 @@ public class AdminPanel extends javax.swing.JFrame {
     // Opens User Panel if the selection from the JTree is a leaf and not the root node
     private void userViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userViewButtonMouseClicked
         TreePath[] tp = jTree1.getSelectionPaths();
-        for (TreePath t : tp) {
-            if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
-                System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
-                new UserUi(((DefaultMutableTreeNode)t.getLastPathComponent()).toString()).setVisible(true);
+        
+        if (tp != null) {
+            for (TreePath t : tp) {
+                if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
+                    System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
+                    errorText.setText("");
+                    new UserUi((User) ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).setVisible(true);
+                } else {
+                    errorText.setText("Selection may not be a group.");
+                }
             }
+        } else {
+            errorText.setText("Select a user from the Tree.");
         }
     }//GEN-LAST:event_userViewButtonMouseClicked
 
@@ -263,6 +283,7 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JTextArea addGroupTextArea;
     private javax.swing.JButton addUserButton;
     private javax.swing.JTextArea addUserTextArea;
+    private javax.swing.JLabel errorText;
     private javax.swing.JButton groupTotalButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

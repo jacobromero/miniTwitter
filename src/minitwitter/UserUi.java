@@ -5,11 +5,15 @@
  */
 package minitwitter;
 
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
+
 /**
  *
  * @author Jacob Romero
  */
 public class UserUi extends javax.swing.JFrame {
+    private User user;
 
     /**
      * Creates new form UserUi
@@ -18,9 +22,22 @@ public class UserUi extends javax.swing.JFrame {
         initComponents();
     }
     
-    public UserUi(String userName) {
+    public UserUi(User user) {
         initComponents();
-        userIdTextArea.setText(userName);
+        this.user = user;
+        userIdTextArea.setText(user.getName());
+        
+        DefaultListModel<String> f = new DefaultListModel<String>();
+        for (User u : user.getFollowing()) {
+            f.addElement(u.getName());
+        }
+        followersList.setModel(f);
+        
+        DefaultListModel<String> t = new DefaultListModel<String>();
+        for (String s : user.getTweets()) {
+            t.addElement(s);
+        }
+        newsFeedList.setModel(t);
     }
 
     /**
@@ -59,11 +76,6 @@ public class UserUi extends javax.swing.JFrame {
         followButton.setText("Follow User");
         followButton.setPreferredSize(new java.awt.Dimension(287, 32));
 
-        followersList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(followersList);
 
         tweetMessageArea.setColumns(20);
@@ -71,12 +83,12 @@ public class UserUi extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tweetMessageArea);
 
         postTweetButton.setText("Post Tweet");
-
-        newsFeedList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        postTweetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postTweetButtonActionPerformed(evt);
+            }
         });
+
         jScrollPane4.setViewportView(newsFeedList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -87,7 +99,7 @@ public class UserUi extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -115,12 +127,19 @@ public class UserUi extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                     .addComponent(postTweetButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void postTweetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postTweetButtonActionPerformed
+        String message = tweetMessageArea.getText();
+        this.user.postTweet(message);
+        ((DefaultListModel) newsFeedList.getModel()).addElement(message);
+        tweetMessageArea.setText("");
+    }//GEN-LAST:event_postTweetButtonActionPerformed
 
     /**
      * @param args the command line arguments

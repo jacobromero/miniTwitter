@@ -89,4 +89,8 @@ public class User implements Subject, Observer, Node {
     public String toString() {
         return this.name;
     }
+    
+    public void postTweet(String message) {
+        this.tweets.add(message);
+    }
 }
