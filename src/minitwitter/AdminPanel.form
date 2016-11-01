@@ -101,7 +101,7 @@
         <Component class="javax.swing.JTree" name="jTree1">
           <Properties>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new DefaultTreeModel(new DefaultMutableTreeNode(&quot;Root&quot;))" type="code"/>
+              <Connection code="new TreeModel(new DefaultMutableTreeNode(&quot;Root&quot;))" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -193,6 +193,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Show User Total"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="userTotalButtonMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="groupTotalButton">
       <Properties>

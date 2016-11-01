@@ -63,7 +63,7 @@ public class AdminPanel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTree1.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Root")));
+        jTree1.setModel(new TreeModel(new DefaultMutableTreeNode("Root")));
         jScrollPane1.setViewportView(jTree1);
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -112,6 +112,11 @@ public class AdminPanel extends javax.swing.JFrame {
         messageTotalButton.setText("Show Message Total");
 
         userTotalButton.setText("Show User Total");
+        userTotalButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                userTotalButtonMouseClicked(evt);
+            }
+        });
 
         groupTotalButton.setText("Show Total Groups");
 
@@ -178,6 +183,7 @@ public class AdminPanel extends javax.swing.JFrame {
         TreePath[] tp = jTree1.getSelectionPaths();
         for (TreePath t : tp) {
             if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
+                System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
                 new UserUi(((DefaultMutableTreeNode)t.getLastPathComponent()).toString()).setVisible(true);
             }
         }
@@ -188,9 +194,8 @@ public class AdminPanel extends javax.swing.JFrame {
         TreePath[] tp = jTree1.getSelectionPaths();
         for (TreePath t : tp) {
             if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
-                DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(addGroupTextArea.getText());
-                newGroup.setAllowsChildren(true);
-                ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+                ((TreeModel)jTree1.getModel()).addGroup(t, addGroupTextArea.getText());
+                
                 addGroupTextArea.setText("");
             } else {
                 addGroupTextArea.setText("");                
@@ -204,9 +209,7 @@ public class AdminPanel extends javax.swing.JFrame {
         TreePath[] tp = jTree1.getSelectionPaths();
         for (TreePath t : tp) {
             if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
-                DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(addUserTextArea.getText());
-                newGroup.setAllowsChildren(false);
-                ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+                ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText());
                 addUserTextArea.setText("");
             } else {
                 addUserTextArea.setText("");
@@ -214,6 +217,11 @@ public class AdminPanel extends javax.swing.JFrame {
         }
         ((DefaultTreeModel)jTree1.getModel()).reload();
     }//GEN-LAST:event_addUserButtonMouseClicked
+
+    private void userTotalButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTotalButtonMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_userTotalButtonMouseClicked
 
     /**
      * @param args the command line arguments
