@@ -9,6 +9,18 @@ package minitwitter;
  *
  * @author Jacob Romero
  */
-public class Group implements Node {
-    
+public class Group {
+    private String groupName;
+
+    public Group(String name) {
+        this.groupName = name;
+    }
+
+    public String getName() {
+        return groupName;
+    }
+
+    public String toString() {
+        return groupName;
+    }
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -17,20 +18,28 @@ import java.util.Stack;
 // User will contain a list of 'tweets'
 // username
 // following users
-public class User implements Subject, Observer, Node {
+public class User implements Subject, Observer {
     private HashMap<Integer, Observer> observers;
     private int id;
     private String name;
-    private LinkedList<String> tweets;
+    private LinkedList<Tweet> tweets;
     private LinkedList<User> following;
-    private Stack<String> messages;
+    private DefaultListModel<String> followingUsers;
+    private Stack<Tweet> messages;
+    private DefaultListModel<String> messageList;
 
     public User(String name) {
         this.name = name;
         this.id = new Random().nextInt();
-        tweets = new LinkedList<String>();
+        tweets = new LinkedList<Tweet>();
         following = new LinkedList<User>();
-        messages = new Stack<String>();
+        
+        
+        followingUsers = new DefaultListModel<String>();
+        messageList = new DefaultListModel<String>();
+        
+        
+        messages = new Stack<Tweet>();
         observers = new HashMap<Integer, Observer>();
     }
     
@@ -42,11 +51,11 @@ public class User implements Subject, Observer, Node {
         this.name = name;
     }
 
-    public LinkedList<String> getTweets() {
+    public LinkedList<Tweet> getTweets() {
         return tweets;
     }
 
-    public void setTweets(LinkedList<String> tweets) {
+    public void setTweets(LinkedList<Tweet> tweets) {
         this.tweets = tweets;
     }
 
@@ -60,7 +69,9 @@ public class User implements Subject, Observer, Node {
 
     @Override
     public void attach(Observer o) {
+        followingUsers.addElement(o.toString());
         observers.put(o.getId(), o);
+        System.err.println(o + " started following " + this);
     }
 
     @Override
@@ -72,15 +83,15 @@ public class User implements Subject, Observer, Node {
     public void notifyObservers() {
         // update all user following
         for (int key : observers.keySet()) {
-            observers.get(key).update();
+            observers.get(key).update(this.tweets.getLast());
         }
     }
 
     @Override
-    public void update() {
-        messages.push("Update");
+    public void update(Tweet t) {
+        messageList.addElement(t.getMessage() + " | Written by: " + t.getPoster());
     }
-
+    
     @Override
     public int getId() {
         return this.id;
@@ -91,6 +102,18 @@ public class User implements Subject, Observer, Node {
     }
     
     public void postTweet(String message) {
-        this.tweets.add(message);
+        this.tweets.add(new Tweet(this, message));
+    }
+    
+    public Stack<Tweet> getMessages() {
+        return this.messages;
+    }
+    
+    public DefaultListModel<String> getFollowingList() {
+        return this.followingUsers;
+    }
+    
+    public DefaultListModel<String> getMessageList() {
+        return this.messageList;
     }
 }

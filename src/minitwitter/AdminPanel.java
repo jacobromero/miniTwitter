@@ -5,7 +5,11 @@
  */
 package minitwitter;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
+import javax.swing.JDialog;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -36,9 +40,16 @@ public class AdminPanel extends javax.swing.JFrame {
      */
     private AdminPanel() {
         initComponents();
+
+        // Add visitors for the aggregation buttons
+        VisitHandler visitor = new VisitHandler();
+        messageTotalButton.addActionListener(visitor);
+        userTotalButton.addActionListener(visitor);
+        groupTotalButton.addActionListener(visitor);
+        positivePercentButton.addActionListener(visitor);
+
         ((TreeModel) jTree1.getModel()).addLeaf("Jacob Romero");
         
-//        System.out.println(jTree1.getAnchorSelectionPath());
         for (int i = 0; i < jTree1.getRowCount(); i++) {
             jTree1.expandRow(i);
         }
@@ -119,11 +130,6 @@ public class AdminPanel extends javax.swing.JFrame {
         messageTotalButton.setText("Show Message Total");
 
         userTotalButton.setText("Show User Total");
-        userTotalButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                userTotalButtonMouseClicked(evt);
-            }
-        });
 
         groupTotalButton.setText("Show Total Groups");
 
@@ -199,7 +205,11 @@ public class AdminPanel extends javax.swing.JFrame {
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
                     System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
                     errorText.setText("");
-                    new UserUi((User) ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).setVisible(true);
+                    new UserUi((User) ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject(), (TreeModel) jTree1.getModel()).setVisible(true);
+
+                    for (int i = 0; i < jTree1.getRowCount(); i++) {
+                        jTree1.expandRow(i);
+                    }
                 } else {
                     errorText.setText("Selection may not be a group.");
                 }
@@ -227,21 +237,22 @@ public class AdminPanel extends javax.swing.JFrame {
     // Adds a user to the Jtree as long as the selected item allows for the node to have children
     private void addUserButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addUserButtonMouseClicked
         TreePath[] tp = jTree1.getSelectionPaths();
-        for (TreePath t : tp) {
-            if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
-                ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText());
-                addUserTextArea.setText("");
-            } else {
-                addUserTextArea.setText("");
+
+        if (tp != null) {
+            for (TreePath t : tp) {
+                if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
+                    ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText());
+                    addUserTextArea.setText("");
+                } else {
+                    addUserTextArea.setText("");
+                }
             }
+        } else {
+            ((TreeModel)jTree1.getModel()).addLeaf(addUserTextArea.getText());
+            addUserTextArea.setText("");
         }
         ((DefaultTreeModel)jTree1.getModel()).reload();
     }//GEN-LAST:event_addUserButtonMouseClicked
-
-    private void userTotalButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTotalButtonMouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_userTotalButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -271,11 +282,32 @@ public class AdminPanel extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                getInstance().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            getInstance().setVisible(true);
         });
+    }
+
+    private class VisitHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == messageTotalButton) {
+                MessageTotal mt = new MessageTotal();
+                ((TreeModel) jTree1.getModel()).accept(mt);
+                new DataDialog("Total messages - " + mt.getResults()).setVisible(true);
+            } else if (e.getSource() == groupTotalButton) {
+                GroupTotal gt = new GroupTotal();
+                ((TreeModel) jTree1.getModel()).accept(gt);
+                new DataDialog("Total groups - " + gt.getResults()).setVisible(true);
+            } else if (e.getSource() == userTotalButton) {
+                UserTotal ut = new UserTotal();
+                ((TreeModel) jTree1.getModel()).accept(ut);
+                new DataDialog("Total users - " + ut.getResults()).setVisible(true);
+            } else if (e.getSource() == positivePercentButton) {
+                PositiveTotal pt = new PositiveTotal();
+                ((TreeModel) jTree1.getModel()).accept(pt);
+                new DataDialog("Total positive messages - " + pt.getResults()).setVisible(true);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -295,3 +327,4 @@ public class AdminPanel extends javax.swing.JFrame {
     private javax.swing.JButton userViewButton;
     // End of variables declaration//GEN-END:variables
 }
+

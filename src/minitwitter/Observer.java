@@ -10,6 +10,6 @@ package minitwitter;
  * @author Jacob Romero
  */
 public interface Observer {
-    public void update();
+    public void update(Tweet t);
     public int getId();
 }

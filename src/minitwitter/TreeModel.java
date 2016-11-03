@@ -19,36 +19,60 @@ public class TreeModel extends DefaultTreeModel implements Visitable {
     public TreeModel(TreeNode root) {
         super(root);
     }
-    
+
     public void addLeaf(TreePath t, String userName) {
         DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(new User(userName));
         newGroup.setAllowsChildren(false);
         ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
     }
-    
+
     public void addLeaf(String userName) {
         DefaultMutableTreeNode newUser = new DefaultMutableTreeNode(new User(userName));
         newUser.setAllowsChildren(false);
         ((DefaultMutableTreeNode)this.getRoot()).add(newUser);
     }
-    
-    public void addGroup(TreePath t, String groupName) {
+
+    public void addGroup(TreePath t, String name) {
+        Group groupName = new Group(name);
         DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(groupName);
         newGroup.setAllowsChildren(true);
         ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
     }
-    
+
     public void accept(Visitor v) {
-        Stack<TreeNode> children = new Stack<TreeNode>();
-        children.push((TreeNode) this.getRoot());
-        
+        Stack<DefaultMutableTreeNode> children = new Stack<DefaultMutableTreeNode>();
+        children.push(((DefaultMutableTreeNode) this.getRoot()));
+
         while (!children.empty()) {
             TreeNode currentNode = children.pop();
             v.visit(currentNode);
             for (int i = 0; i < currentNode.getChildCount(); i++) {
-                children.push(currentNode);
+                children.push((DefaultMutableTreeNode) currentNode.getChildAt(i));
             }
         }
     }
-    
+
+    public User getUser(String name) {
+        Stack<DefaultMutableTreeNode> children = new Stack<DefaultMutableTreeNode>();
+        children.push(((DefaultMutableTreeNode) this.getRoot()));
+
+        while (!children.empty()) {
+            DefaultMutableTreeNode currentNode = children.pop();
+
+            try {
+                User u = (User) currentNode.getUserObject();
+                if (u.getName().equals(name)) {
+                    return u;
+                }
+            } catch (Exception e) {
+
+            }
+            
+            for (int i = 0; i < currentNode.getChildCount(); i++) {
+                children.push((DefaultMutableTreeNode) currentNode.getChildAt(i));
+            }
+        }
+
+        return null;
+    }
 }

@@ -11,4 +11,5 @@ package minitwitter;
  */
 public interface Visitor {
     public void visit(Object node);
+    public int getResults();
 }

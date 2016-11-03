@@ -1,3 +1,5 @@
+// TODO: Change userIdTextArea -> userNameTextArea
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,6 +16,7 @@ import javax.swing.ListModel;
  */
 public class UserUi extends javax.swing.JFrame {
     private User user;
+    private TreeModel tm;
 
     /**
      * Creates new form UserUi
@@ -22,22 +25,16 @@ public class UserUi extends javax.swing.JFrame {
         initComponents();
     }
     
-    public UserUi(User user) {
+    public UserUi(User user, TreeModel tm) {
         initComponents();
+        
+        this.tm = tm;
+        
+        this.setTitle(user.getName() + "'s Profile");
         this.user = user;
-        userIdTextArea.setText(user.getName());
         
-        DefaultListModel<String> f = new DefaultListModel<String>();
-        for (User u : user.getFollowing()) {
-            f.addElement(u.getName());
-        }
-        followersList.setModel(f);
-        
-        DefaultListModel<String> t = new DefaultListModel<String>();
-        for (String s : user.getTweets()) {
-            t.addElement(s);
-        }
-        newsFeedList.setModel(t);
+        followersList.setModel(user.getFollowingList());
+        newsFeedList.setModel(user.getMessageList());
     }
 
     /**
@@ -65,7 +62,6 @@ public class UserUi extends javax.swing.JFrame {
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        userIdTextArea.setEditable(false);
         userIdTextArea.setColumns(20);
         userIdTextArea.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         userIdTextArea.setRows(1);
@@ -75,6 +71,11 @@ public class UserUi extends javax.swing.JFrame {
 
         followButton.setText("Follow User");
         followButton.setPreferredSize(new java.awt.Dimension(287, 32));
+        followButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                followButtonActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setViewportView(followersList);
 
@@ -89,6 +90,7 @@ public class UserUi extends javax.swing.JFrame {
             }
         });
 
+        newsFeedList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPane4.setViewportView(newsFeedList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -101,15 +103,15 @@ public class UserUi extends javax.swing.JFrame {
                     .addComponent(jScrollPane4)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(followButton, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(followButton, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(postTweetButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(postTweetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -137,9 +139,17 @@ public class UserUi extends javax.swing.JFrame {
     private void postTweetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postTweetButtonActionPerformed
         String message = tweetMessageArea.getText();
         this.user.postTweet(message);
-        ((DefaultListModel) newsFeedList.getModel()).addElement(message);
         tweetMessageArea.setText("");
+        
+        this.user.notifyObservers();
     }//GEN-LAST:event_postTweetButtonActionPerformed
+
+    private void followButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_followButtonActionPerformed
+        User followUser = this.tm.getUser(userIdTextArea.getText());
+        if (followUser != null) {
+            followUser.attach(user);
+        }
+    }//GEN-LAST:event_followButtonActionPerformed
 
     /**
      * @param args the command line arguments
