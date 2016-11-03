@@ -7,6 +7,7 @@ package minitwitter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import javax.swing.JDialog;
 import javax.swing.JTree;
@@ -40,7 +41,7 @@ public class AdminPanel extends javax.swing.JFrame {
      */
     private AdminPanel() {
         initComponents();
-
+        
         // Add visitors for the aggregation buttons
         VisitHandler visitor = new VisitHandler();
         messageTotalButton.addActionListener(visitor);
@@ -66,11 +67,7 @@ public class AdminPanel extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        addUserTextArea = new javax.swing.JTextArea();
         addUserButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        addGroupTextArea = new javax.swing.JTextArea();
         addGroupButton = new javax.swing.JButton();
         userViewButton = new javax.swing.JButton();
         positivePercentButton = new javax.swing.JButton();
@@ -78,6 +75,8 @@ public class AdminPanel extends javax.swing.JFrame {
         userTotalButton = new javax.swing.JButton();
         groupTotalButton = new javax.swing.JButton();
         errorText = new javax.swing.JLabel();
+        addUserTextArea = new javax.swing.JTextField();
+        addGroupTextArea = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -85,31 +84,12 @@ public class AdminPanel extends javax.swing.JFrame {
         jTree1.setModel(new TreeModel(new DefaultMutableTreeNode("Root")));
         jScrollPane1.setViewportView(jTree1);
 
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        addUserTextArea.setColumns(20);
-        addUserTextArea.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
-        addUserTextArea.setTabSize(4);
-        addUserTextArea.setToolTipText("Enter a user name to add");
-        jScrollPane2.setViewportView(addUserTextArea);
-
         addUserButton.setText("Add User");
         addUserButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 addUserButtonMouseClicked(evt);
             }
         });
-
-        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        addGroupTextArea.setColumns(20);
-        addGroupTextArea.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
-        addGroupTextArea.setRows(1);
-        addGroupTextArea.setTabSize(4);
-        addGroupTextArea.setToolTipText("Enter a user name to add");
-        jScrollPane3.setViewportView(addGroupTextArea);
 
         addGroupButton.setText("Add Group");
         addGroupButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -135,6 +115,18 @@ public class AdminPanel extends javax.swing.JFrame {
 
         errorText.setForeground(new java.awt.Color(255, 0, 0));
 
+        addUserTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                addUserTextAreaKeyTyped(evt);
+            }
+        });
+
+        addGroupTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                addGroupTextAreaKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,13 +147,15 @@ public class AdminPanel extends javax.swing.JFrame {
                     .addComponent(userViewButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3)
-                            .addComponent(jScrollPane2))
+                            .addComponent(addUserTextArea)
+                            .addComponent(addGroupTextArea))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(addGroupButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(addUserButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(errorText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(errorText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -172,12 +166,12 @@ public class AdminPanel extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(addUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
+                            .addComponent(addUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                            .addComponent(addUserTextArea))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                            .addComponent(addGroupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(addGroupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                            .addComponent(addGroupTextArea))
                         .addGap(18, 18, 18)
                         .addComponent(userViewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -221,39 +215,67 @@ public class AdminPanel extends javax.swing.JFrame {
 
     // Adds a group to the JTree as long as the selected item allows for having children
     private void addGroupButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addGroupButtonMouseClicked
-        TreePath[] tp = jTree1.getSelectionPaths();
-        for (TreePath t : tp) {
-            if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
-                ((TreeModel)jTree1.getModel()).addGroup(t, addGroupTextArea.getText());
-                
-                addGroupTextArea.setText("");
-            } else {
-                addGroupTextArea.setText("");                
-            }
-        }
-        ((DefaultTreeModel)jTree1.getModel()).reload();
+        addGroup();
     }//GEN-LAST:event_addGroupButtonMouseClicked
 
-    // Adds a user to the Jtree as long as the selected item allows for the node to have children
+    private void addUserTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addUserTextAreaKeyTyped
+        if (evt.getKeyChar() == '\n') {
+            addUser();
+        }
+    }//GEN-LAST:event_addUserTextAreaKeyTyped
+
     private void addUserButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addUserButtonMouseClicked
+        addUser();
+    }//GEN-LAST:event_addUserButtonMouseClicked
+
+    private void addGroupTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addGroupTextAreaKeyTyped
+        if (evt.getKeyChar() == '\n') {
+            addGroup();
+        }
+    }//GEN-LAST:event_addGroupTextAreaKeyTyped
+
+    private void addUser() {
         TreePath[] tp = jTree1.getSelectionPaths();
 
         if (tp != null) {
             for (TreePath t : tp) {
-                if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren()) {
-                    ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText());
+                if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren() && !addUserTextArea.getText().trim().equals("")) {
+                    ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText().trim());
                     addUserTextArea.setText("");
                 } else {
+                    errorText.setText("Cannot insert empty user, or user must be inserted into a group.");
                     addUserTextArea.setText("");
                 }
             }
-        } else {
+        } else if (!addUserTextArea.getText().trim().equals("")){
             ((TreeModel)jTree1.getModel()).addLeaf(addUserTextArea.getText());
+            addUserTextArea.setText("");
+        } else {
+            errorText.setText("Cannot insert empty user name.");
             addUserTextArea.setText("");
         }
         ((DefaultTreeModel)jTree1.getModel()).reload();
-    }//GEN-LAST:event_addUserButtonMouseClicked
-
+    }
+    
+    private void addGroup() {
+        TreePath[] tp = jTree1.getSelectionPaths();
+        if (tp != null) {
+            for (TreePath t : tp) {
+                if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren() && !addGroupTextArea.getText().trim().equals("")) {
+                    ((TreeModel)jTree1.getModel()).addGroup(t, addGroupTextArea.getText());
+                    addGroupTextArea.setText("");
+                } else {
+                    errorText.setText("Cannot insert empty group, or group must be inserted into another group.");
+                    addGroupTextArea.setText("");                
+                }
+            }
+        } else if (!addGroupTextArea.getText().trim().equals("")) {
+            ((TreeModel) jTree1.getModel()).addGroup(addGroupTextArea.getText());
+            addGroupTextArea.setText("");
+        }
+        ((DefaultTreeModel)jTree1.getModel()).reload();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -312,14 +334,12 @@ public class AdminPanel extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addGroupButton;
-    private javax.swing.JTextArea addGroupTextArea;
+    private javax.swing.JTextField addGroupTextArea;
     private javax.swing.JButton addUserButton;
-    private javax.swing.JTextArea addUserTextArea;
+    private javax.swing.JTextField addUserTextArea;
     private javax.swing.JLabel errorText;
     private javax.swing.JButton groupTotalButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTree jTree1;
     private javax.swing.JButton messageTotalButton;
     private javax.swing.JButton positivePercentButton;

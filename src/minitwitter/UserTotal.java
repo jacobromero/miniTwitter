@@ -29,7 +29,7 @@ public class UserTotal implements Visitor{
 
     @Override
     public int getResults() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return count;
     }
     
 }

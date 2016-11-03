@@ -38,6 +38,13 @@ public class TreeModel extends DefaultTreeModel implements Visitable {
         newGroup.setAllowsChildren(true);
         ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
     }
+    
+    public void addGroup(String name) {
+        Group groupName = new Group(name);
+        DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(groupName);
+        newGroup.setAllowsChildren(true);
+        ((DefaultMutableTreeNode)this.getRoot()).add(newGroup);
+    }
 
     public void accept(Visitor v) {
         Stack<DefaultMutableTreeNode> children = new Stack<DefaultMutableTreeNode>();
