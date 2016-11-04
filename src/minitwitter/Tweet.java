@@ -26,4 +26,8 @@ public class Tweet {
         return poster;
     }
     
+    public String toString() {
+        return message + " | by " + poster;
+    }
+    
 }

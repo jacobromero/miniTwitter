@@ -1,5 +1,3 @@
-// TODO: Change userIdTextArea -> userNameTextArea
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -46,8 +44,6 @@ public class UserUi extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        userIdTextArea = new javax.swing.JTextArea();
         followButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         followersList = new javax.swing.JList<>();
@@ -56,18 +52,9 @@ public class UserUi extends javax.swing.JFrame {
         postTweetButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         newsFeedList = new javax.swing.JList<>();
+        userNameTextArea = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-
-        userIdTextArea.setColumns(20);
-        userIdTextArea.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        userIdTextArea.setRows(1);
-        userIdTextArea.setTabSize(4);
-        userIdTextArea.setPreferredSize(new java.awt.Dimension(287, 24));
-        jScrollPane1.setViewportView(userIdTextArea);
 
         followButton.setText("Follow User");
         followButton.setPreferredSize(new java.awt.Dimension(287, 32));
@@ -93,6 +80,12 @@ public class UserUi extends javax.swing.JFrame {
         newsFeedList.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jScrollPane4.setViewportView(newsFeedList);
 
+        userNameTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                userNameTextAreaKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,7 +98,7 @@ public class UserUi extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(userNameTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(followButton, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
@@ -120,8 +113,8 @@ public class UserUi extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(followButton, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE))
+                    .addComponent(followButton, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                    .addComponent(userNameTextArea))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -145,12 +138,22 @@ public class UserUi extends javax.swing.JFrame {
     }//GEN-LAST:event_postTweetButtonActionPerformed
 
     private void followButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_followButtonActionPerformed
-        User followUser = this.tm.getUser(userIdTextArea.getText());
-        if (followUser != null) {
-            followUser.attach(user);
-        }
+        followUser();
     }//GEN-LAST:event_followButtonActionPerformed
 
+    private void userNameTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userNameTextAreaKeyTyped
+        if (evt.getKeyChar() == '\n') {
+            followUser();
+        }
+    }//GEN-LAST:event_userNameTextAreaKeyTyped
+    
+    private void followUser() {
+        User followUser = this.tm.getUser(userNameTextArea.getText());
+        if (followUser != null) {
+            followUser.attach(user);
+            user.addMessages(followUser.getTweets());
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -189,13 +192,12 @@ public class UserUi extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton followButton;
     private javax.swing.JList<String> followersList;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JList<String> newsFeedList;
     private javax.swing.JButton postTweetButton;
     private javax.swing.JTextArea tweetMessageArea;
-    private javax.swing.JTextArea userIdTextArea;
+    private javax.swing.JTextField userNameTextArea;
     // End of variables declaration//GEN-END:variables
 }

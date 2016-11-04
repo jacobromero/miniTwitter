@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import minitwitter.setUpCode.SetUp;
 
 /**
  *
@@ -73,8 +74,12 @@ public class AdminPanel extends javax.swing.JFrame {
         groupTotalButton.addActionListener(visitor);
         positivePercentButton.addActionListener(visitor);
 
-        ((TreeModel) jTree1.getModel()).addLeaf("Jacob Romero");
-        DefaultMutableTreeNode node = ((TreeModel) jTree1.getModel()).addGroup("some group");
+        /***********************************************
+         * Set up the users/tweets programatically
+         */
+        
+        SetUp.run(jTree1);
+         
         
         for (int i = 0; i < jTree1.getRowCount(); i++) {
             jTree1.expandRow(i);
@@ -223,7 +228,6 @@ public class AdminPanel extends javax.swing.JFrame {
         if (tp != null) {
             for (TreePath t : tp) {
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
-                    System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
                     errorText.setText("");
                     new UserUi((User) ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject(), (TreeModel) jTree1.getModel()).setVisible(true);
                 } else {

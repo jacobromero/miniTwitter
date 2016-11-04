@@ -71,7 +71,6 @@ public class User implements Subject, Observer {
     public void attach(Observer o) {
         followingUsers.addElement(o.toString());
         observers.put(o.getId(), o);
-        System.err.println(o + " started following " + this);
     }
 
     @Override
@@ -107,6 +106,13 @@ public class User implements Subject, Observer {
     
     public Stack<Tweet> getMessages() {
         return this.messages;
+    }
+    
+    public void addMessages(LinkedList<Tweet> t) {
+        for (Tweet tweet : t) {
+            messages.push(tweet);
+            messageList.addElement(tweet.toString());
+        }
     }
     
     public DefaultListModel<String> getFollowingList() {
