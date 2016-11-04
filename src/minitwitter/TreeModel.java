@@ -20,30 +20,35 @@ public class TreeModel extends DefaultTreeModel implements Visitable {
         super(root);
     }
 
-    public void addLeaf(TreePath t, String userName) {
-        DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(new User(userName));
-        newGroup.setAllowsChildren(false);
-        ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+    public DefaultMutableTreeNode addLeaf(TreePath t, String userName) {
+        DefaultMutableTreeNode newUser = new DefaultMutableTreeNode(new User(userName));
+        newUser.setAllowsChildren(false);
+        ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newUser);
+        return newUser;
     }
 
-    public void addLeaf(String userName) {
+    public DefaultMutableTreeNode addLeaf(String userName) {
         DefaultMutableTreeNode newUser = new DefaultMutableTreeNode(new User(userName));
         newUser.setAllowsChildren(false);
         ((DefaultMutableTreeNode)this.getRoot()).add(newUser);
+        return newUser;
     }
 
-    public void addGroup(TreePath t, String name) {
+    public DefaultMutableTreeNode addGroup(TreePath t, String name) {
         Group groupName = new Group(name);
         DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(groupName);
         newGroup.setAllowsChildren(true);
         ((DefaultMutableTreeNode)t.getLastPathComponent()).add(newGroup);
+        return newGroup;
     }
     
-    public void addGroup(String name) {
+    public DefaultMutableTreeNode addGroup(String name) {
         Group groupName = new Group(name);
         DefaultMutableTreeNode newGroup = new DefaultMutableTreeNode(groupName);
         newGroup.setAllowsChildren(true);
         ((DefaultMutableTreeNode)this.getRoot()).add(newGroup);
+
+        return newGroup;
     }
 
     public void accept(Visitor v) {

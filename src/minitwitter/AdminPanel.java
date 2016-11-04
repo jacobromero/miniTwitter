@@ -5,13 +5,17 @@
  */
 package minitwitter;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
+import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -42,6 +46,26 @@ public class AdminPanel extends javax.swing.JFrame {
     private AdminPanel() {
         initComponents();
         
+        jTree1.setCellRenderer(new DefaultTreeCellRenderer () {
+            private Icon groupIcon = UIManager.getIcon("Tree.openIcon");
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree,
+                    Object value, boolean selected, boolean expanded,
+                    boolean isLeaf, int row, boolean focused) {
+                Component c = super.getTreeCellRendererComponent(tree, value,
+                        selected, expanded, isLeaf, row, focused);
+                
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                if (node.getUserObject().getClass().equals(User.class)) {
+                    setIcon(null);
+                } else if (!jTree1.isExpanded(jTree1.getSelectionPath())) {
+                    setIcon(groupIcon);
+                }
+                return c;
+            }
+        });
+        
+        
         // Add visitors for the aggregation buttons
         VisitHandler visitor = new VisitHandler();
         messageTotalButton.addActionListener(visitor);
@@ -50,6 +74,7 @@ public class AdminPanel extends javax.swing.JFrame {
         positivePercentButton.addActionListener(visitor);
 
         ((TreeModel) jTree1.getModel()).addLeaf("Jacob Romero");
+        DefaultMutableTreeNode node = ((TreeModel) jTree1.getModel()).addGroup("some group");
         
         for (int i = 0; i < jTree1.getRowCount(); i++) {
             jTree1.expandRow(i);
@@ -82,6 +107,7 @@ public class AdminPanel extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jTree1.setModel(new TreeModel(new DefaultMutableTreeNode("Root")));
+        jTree1.setCellRenderer(null);
         jScrollPane1.setViewportView(jTree1);
 
         addUserButton.setText("Add User");
@@ -200,10 +226,6 @@ public class AdminPanel extends javax.swing.JFrame {
                     System.out.println(((User)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject()).getId());
                     errorText.setText("");
                     new UserUi((User) ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject(), (TreeModel) jTree1.getModel()).setVisible(true);
-
-                    for (int i = 0; i < jTree1.getRowCount(); i++) {
-                        jTree1.expandRow(i);
-                    }
                 } else {
                     errorText.setText("Selection may not be a group.");
                 }
@@ -254,11 +276,17 @@ public class AdminPanel extends javax.swing.JFrame {
             errorText.setText("Cannot insert empty user name.");
             addUserTextArea.setText("");
         }
+        
         ((DefaultTreeModel)jTree1.getModel()).reload();
+        
+        if (tp != null) {
+            jTree1.expandPath(tp[tp.length - 1]);
+        }
     }
     
     private void addGroup() {
         TreePath[] tp = jTree1.getSelectionPaths();
+        
         if (tp != null) {
             for (TreePath t : tp) {
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren() && !addGroupTextArea.getText().trim().equals("")) {
@@ -274,6 +302,10 @@ public class AdminPanel extends javax.swing.JFrame {
             addGroupTextArea.setText("");
         }
         ((DefaultTreeModel)jTree1.getModel()).reload();
+
+        if (tp != null) {
+            jTree1.expandPath(tp[tp.length - 1]);
+        }
     }
     
     /**
