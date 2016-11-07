@@ -47,6 +47,7 @@ public class AdminPanel extends javax.swing.JFrame {
     private AdminPanel() {
         initComponents();
         
+        // Custom cell rendering on the JTree to display folders only on groups in the tree
         jTree1.setCellRenderer(new DefaultTreeCellRenderer () {
             private Icon groupIcon = UIManager.getIcon("Tree.openIcon");
             @Override
@@ -225,6 +226,7 @@ public class AdminPanel extends javax.swing.JFrame {
     private void userViewButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userViewButtonMouseClicked
         TreePath[] tp = jTree1.getSelectionPaths();
         
+        // if there is a selection on the JTree, and we are not selecting a group then open the user view.
         if (tp != null) {
             for (TreePath t : tp) {
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).isLeaf() && ((DefaultMutableTreeNode) t.getLastPathComponent()).getLevel() != 0) {
@@ -245,6 +247,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_addGroupButtonMouseClicked
 
     private void addUserTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addUserTextAreaKeyTyped
+        // Allow the enter key to submit the user we want to add to the tree
         if (evt.getKeyChar() == '\n') {
             addUser();
         }
@@ -255,16 +258,21 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_addUserButtonMouseClicked
 
     private void addGroupTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_addGroupTextAreaKeyTyped
+        // Allow the enter key to allow the group to be added to the JTree
         if (evt.getKeyChar() == '\n') {
             addGroup();
         }
     }//GEN-LAST:event_addGroupTextAreaKeyTyped
 
+    // Adds the user into the Tree model/JTree
     private void addUser() {
         TreePath[] tp = jTree1.getSelectionPaths();
-
+ 
+        // If there is a selected node on the JTree
         if (tp != null) {
             for (TreePath t : tp) {
+                // And the selection is a group (i.e. we are not trying to add a user under another user.)
+                // As well as the text in the text box is not only white space.
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren() && !addUserTextArea.getText().trim().equals("")) {
                     ((TreeModel)jTree1.getModel()).addLeaf(t, addUserTextArea.getText().trim());
                     addUserTextArea.setText("");
@@ -273,6 +281,7 @@ public class AdminPanel extends javax.swing.JFrame {
                     addUserTextArea.setText("");
                 }
             }
+        // In this case we are adding a node when nothing is selected. so default to the root
         } else if (!addUserTextArea.getText().trim().equals("")){
             ((TreeModel)jTree1.getModel()).addLeaf(addUserTextArea.getText());
             addUserTextArea.setText("");
@@ -283,6 +292,7 @@ public class AdminPanel extends javax.swing.JFrame {
         
         ((DefaultTreeModel)jTree1.getModel()).reload();
         
+        // Expand the node if it collapses.
         if (tp != null) {
             jTree1.expandPath(tp[tp.length - 1]);
         }
@@ -291,8 +301,11 @@ public class AdminPanel extends javax.swing.JFrame {
     private void addGroup() {
         TreePath[] tp = jTree1.getSelectionPaths();
         
+        // If there is a selection on the JTree
         if (tp != null) {
             for (TreePath t : tp) {
+                // And the selection is a group
+                // And the selection is not only white space
                 if (((DefaultMutableTreeNode) t.getLastPathComponent()).getAllowsChildren() && !addGroupTextArea.getText().trim().equals("")) {
                     ((TreeModel)jTree1.getModel()).addGroup(t, addGroupTextArea.getText());
                     addGroupTextArea.setText("");
@@ -301,12 +314,14 @@ public class AdminPanel extends javax.swing.JFrame {
                     addGroupTextArea.setText("");                
                 }
             }
+        // Otherwise no selection from the JTree has been made so defaul tot the root
         } else if (!addGroupTextArea.getText().trim().equals("")) {
             ((TreeModel) jTree1.getModel()).addGroup(addGroupTextArea.getText());
             addGroupTextArea.setText("");
         }
         ((DefaultTreeModel)jTree1.getModel()).reload();
 
+        // expand the path of the newly created node
         if (tp != null) {
             jTree1.expandPath(tp[tp.length - 1]);
         }
@@ -345,21 +360,26 @@ public class AdminPanel extends javax.swing.JFrame {
         });
     }
 
+    // Handeler class that will do the visiting of the specific criteria when a button is clicked
     private class VisitHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            // message total button is pressed, get all the messages each user has posted
             if (e.getSource() == messageTotalButton) {
                 MessageTotal mt = new MessageTotal();
                 ((TreeModel) jTree1.getModel()).accept(mt);
                 new DataDialog("Total messages - " + mt.getResults()).setVisible(true);
+            // Group total button is pressed, get all the nodes from the tree that are of class Group
             } else if (e.getSource() == groupTotalButton) {
                 GroupTotal gt = new GroupTotal();
                 ((TreeModel) jTree1.getModel()).accept(gt);
                 new DataDialog("Total groups - " + gt.getResults()).setVisible(true);
+            // User total button is pressed, get all the nodes from the tree that are of class User
             } else if (e.getSource() == userTotalButton) {
                 UserTotal ut = new UserTotal();
                 ((TreeModel) jTree1.getModel()).accept(ut);
                 new DataDialog("Total users - " + ut.getResults()).setVisible(true);
+            // Positive Percent button is pressed, get all messages from all users that meet the criteria of a positive message.
             } else if (e.getSource() == positivePercentButton) {
                 PositiveTotal pt = new PositiveTotal();
                 ((TreeModel) jTree1.getModel()).accept(pt);
