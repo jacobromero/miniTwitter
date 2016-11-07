@@ -16,18 +16,19 @@ class PositiveTotal implements Visitor {
     
     @Override
     public void visit(Object node) {
+        // If the node can be cast to a user, then extract the messages and check for "Positive" tweets made by the user.
         try {
             DefaultMutableTreeNode dn = ((DefaultMutableTreeNode) node);
             User u = (User) dn.getUserObject();
 
             for (Tweet t : u.getTweets()) {
-                if (t.getMessage().contains("good")) {
+                // Tweets containing the words "good" or "fun" are considered positive.
+                if (t.getMessage().toLowerCase().contains("good") || t.getMessage().toLowerCase().contains("fun")) {
                     count++;
                 }
             }
         }
         catch (Exception e) {
-            System.out.println(e);
         }
     }
 

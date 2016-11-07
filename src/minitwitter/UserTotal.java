@@ -16,6 +16,7 @@ public class UserTotal implements Visitor{
     
     @Override
     public void visit(Object node) {
+        // If the node can bew cast to a user, then increment the counter
         try {
             DefaultMutableTreeNode dn = ((DefaultMutableTreeNode) node);
             User u = (User) dn.getUserObject();

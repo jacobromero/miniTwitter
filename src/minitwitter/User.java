@@ -31,16 +31,14 @@ public class User implements Subject, Observer {
     public User(String name) {
         this.name = name;
         this.id = new Random().nextInt();
-        tweets = new LinkedList<Tweet>();
-        following = new LinkedList<User>();
+        tweets = new LinkedList<>();
+        following = new LinkedList<>();
+
+        followingUsers = new DefaultListModel<>();
+        messageList = new DefaultListModel<>();
         
-        
-        followingUsers = new DefaultListModel<String>();
-        messageList = new DefaultListModel<String>();
-        
-        
-        messages = new Stack<Tweet>();
-        observers = new HashMap<Integer, Observer>();
+        messages = new Stack<>();
+        observers = new HashMap<>();
     }
     
     public String getName() {

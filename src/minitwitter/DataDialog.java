@@ -16,6 +16,7 @@ public class DataDialog extends javax.swing.JFrame {
      */
     public DataDialog(String text) {
         initComponents();
+        // sets the text of the dialog box to the sting passed in
         dialogText.setText(text);
     }
     
@@ -40,7 +41,12 @@ public class DataDialog extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Close Window");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         dialogText.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
@@ -69,6 +75,11 @@ public class DataDialog extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    // When the close window button is presed, then dispose the dialog box
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -25,12 +25,13 @@ public class UserUi extends javax.swing.JFrame {
     
     public UserUi(User user, TreeModel tm) {
         initComponents();
-        
         this.tm = tm;
         
+        // Set the title of the window to the user's name
         this.setTitle(user.getName() + "'s Profile");
         this.user = user;
         
+        // Set the models for the users & messages
         followersList.setModel(user.getFollowingList());
         newsFeedList.setModel(user.getMessageList());
     }
@@ -149,6 +150,8 @@ public class UserUi extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // Action Listener to post tweet
     private void postTweetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postTweetButtonActionPerformed
         String message = tweetMessageArea.getText();
         this.user.postTweet(message);
@@ -157,6 +160,7 @@ public class UserUi extends javax.swing.JFrame {
         this.user.notifyObservers();
     }//GEN-LAST:event_postTweetButtonActionPerformed
 
+    // Have the current user follow the name typed in
     private void followButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_followButtonActionPerformed
         followUser();
     }//GEN-LAST:event_followButtonActionPerformed
@@ -174,6 +178,7 @@ public class UserUi extends javax.swing.JFrame {
             user.addMessages(followUser.getTweets());
         }
     }
+    
     /**
      * @param args the command line arguments
      */

@@ -9,6 +9,8 @@ package minitwitter;
  *
  * @author Jacob Romero
  */
+// Tweet meta data containing the raw message, and poster
+// before the two are combined into a timeline message "{tweet text} | by {user name}"
 public class Tweet {
     private String message;
     private User poster;
@@ -26,6 +28,7 @@ public class Tweet {
         return poster;
     }
     
+    // Tweet text combined with the user name, to display on news feeds of followers
     public String toString() {
         return message + " | by " + poster;
     }

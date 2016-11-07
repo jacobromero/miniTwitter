@@ -16,6 +16,7 @@ public class GroupTotal implements Visitor {
 
     @Override
     public void visit(Object node) {
+        // Visits each node, if the node cannot be cast to the group type, then don't count it.
         try {
            DefaultMutableTreeNode dn = ((DefaultMutableTreeNode) node);
             Group u = (Group) dn.getUserObject();

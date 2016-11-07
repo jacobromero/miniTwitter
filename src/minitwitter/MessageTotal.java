@@ -16,6 +16,7 @@ public class MessageTotal implements Visitor {
 
     @Override
     public void visit(Object node) {
+        // If the tree node being passed into the visit can be cast to a user then increment the counter by 1
         try {
             DefaultMutableTreeNode dn = ((DefaultMutableTreeNode) node);
             User u = (User) dn.getUserObject();
@@ -23,7 +24,7 @@ public class MessageTotal implements Visitor {
             count += u.getMessages().size();
         }
         catch (Exception e) {
-            System.out.println(e);
+            
         }
     }
     
